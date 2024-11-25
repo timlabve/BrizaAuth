@@ -1,0 +1,6 @@
+@brizaapp_HostAddress = http://localhost:5058
+
+GET {{brizaapp_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
