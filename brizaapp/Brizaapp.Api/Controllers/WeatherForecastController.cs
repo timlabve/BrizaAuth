@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace brizaapp.Controllers
+namespace Brizaapp.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]

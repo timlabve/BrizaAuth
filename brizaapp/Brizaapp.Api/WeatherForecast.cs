@@ -1,4 +1,4 @@
-namespace brizaapp
+namespace Brizaapp.Api
 {
     public class WeatherForecast
     {
