@@ -15,6 +15,9 @@ namespace Brizaapp.Database.Migrations
             migrationBuilder.EnsureSchema(
                 name: "identity");
 
+            migrationBuilder.EnsureSchema(
+                name: "subscriptions");
+
             migrationBuilder.CreateTable(
                 name: "identity_role",
                 schema: "identity",
@@ -45,6 +48,13 @@ namespace Brizaapp.Database.Migrations
                     Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedById = table.Column<int>(type: "integer", nullable: true, defaultValue: 1),
                     ModifiedById = table.Column<int>(type: "integer", nullable: true, defaultValue: 1),
+                    IdentifierValue = table.Column<string>(type: "text", nullable: true),
+                    IdentifierMedValue = table.Column<string>(type: "text", nullable: true),
+                    UserType = table.Column<int>(type: "integer", nullable: false),
+                    ValidatedUser = table.Column<bool>(type: "boolean", nullable: false),
+                    DateValidatedUser = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    ValidatedMed = table.Column<bool>(type: "boolean", nullable: false),
+                    DateValidatedMed = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -196,6 +206,77 @@ namespace Brizaapp.Database.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "subscriptions_subscription",
+                schema: "subscriptions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    PlanName = table.Column<string>(type: "text", nullable: false),
+                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Params = table.Column<string>(type: "text", nullable: false),
+                    Active = table.Column<bool>(type: "boolean", nullable: false),
+                    Order = table.Column<int>(type: "integer", nullable: false),
+                    Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedById = table.Column<int>(type: "integer", nullable: true),
+                    ModifiedById = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_subscriptions_subscription", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_subscriptions_subscription_identity_user_CreatedById",
+                        column: x => x.CreatedById,
+                        principalSchema: "identity",
+                        principalTable: "identity_user",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_subscriptions_subscription_identity_user_ModifiedById",
+                        column: x => x.ModifiedById,
+                        principalSchema: "identity",
+                        principalTable: "identity_user",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "subscriptions_subscriptionuser",
+                schema: "subscriptions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    SubscriptionId = table.Column<Guid>(type: "uuid", nullable: false),
+                    PlanName = table.Column<string>(type: "text", nullable: false),
+                    CreatedById = table.Column<int>(type: "integer", nullable: true),
+                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Params = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_subscriptions_subscriptionuser", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_subscriptions_subscriptionuser_identity_user_CreatedById",
+                        column: x => x.CreatedById,
+                        principalSchema: "identity",
+                        principalTable: "identity_user",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_subscriptions_subscriptionuser_identity_user_UserId",
+                        column: x => x.UserId,
+                        principalSchema: "identity",
+                        principalTable: "identity_user",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_subscriptions_subscriptionuser_subscriptions_subscription_S~",
+                        column: x => x.SubscriptionId,
+                        principalSchema: "subscriptions",
+                        principalTable: "subscriptions_subscription",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_identity_identityroleclaim<int>_RoleId",
                 schema: "identity",
@@ -251,6 +332,36 @@ namespace Brizaapp.Database.Migrations
                 table: "identity_user",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_subscriptions_subscription_CreatedById",
+                schema: "subscriptions",
+                table: "subscriptions_subscription",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_subscriptions_subscription_ModifiedById",
+                schema: "subscriptions",
+                table: "subscriptions_subscription",
+                column: "ModifiedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_subscriptions_subscriptionuser_CreatedById",
+                schema: "subscriptions",
+                table: "subscriptions_subscriptionuser",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_subscriptions_subscriptionuser_SubscriptionId",
+                schema: "subscriptions",
+                table: "subscriptions_subscriptionuser",
+                column: "SubscriptionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_subscriptions_subscriptionuser_UserId",
+                schema: "subscriptions",
+                table: "subscriptions_subscriptionuser",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -277,8 +388,16 @@ namespace Brizaapp.Database.Migrations
                 schema: "identity");
 
             migrationBuilder.DropTable(
+                name: "subscriptions_subscriptionuser",
+                schema: "subscriptions");
+
+            migrationBuilder.DropTable(
                 name: "identity_role",
                 schema: "identity");
+
+            migrationBuilder.DropTable(
+                name: "subscriptions_subscription",
+                schema: "subscriptions");
 
             migrationBuilder.DropTable(
                 name: "identity_user",

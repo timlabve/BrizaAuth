@@ -2,12 +2,16 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Brizaapp.Utils;
+using Brizaapp.Database.Subscriptions;
 
 namespace Brizaapp.Database
 {
   public class BrizaContext : IdentityDbContext<User, Role, int>
   {
     public BrizaContext(DbContextOptions<BrizaContext> options) : base(options) { }
+
+    public DbSet<Subscription> Subscriptions { get; set; }
+    public DbSet<SubscriptionUser> SubscriptionUsers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

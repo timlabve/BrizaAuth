@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Brizaapp.Database.Migrations
 {
     [DbContext(typeof(BrizaContext))]
-    [Migration("20241128071412_InitialMigration")]
+    [Migration("20241128081127_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -77,6 +77,12 @@ namespace Brizaapp.Database.Migrations
                         .HasColumnType("integer")
                         .HasDefaultValue(1);
 
+                    b.Property<DateTime?>("DateValidatedMed")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DateValidatedUser")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<bool>("Disabled")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
@@ -91,6 +97,12 @@ namespace Brizaapp.Database.Migrations
 
                     b.Property<string>("FirstName")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("IdentifierMedValue")
+                        .HasColumnType("text");
+
+                    b.Property<string>("IdentifierValue")
                         .HasColumnType("text");
 
                     b.Property<string>("LastName")
@@ -137,6 +149,15 @@ namespace Brizaapp.Database.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
+                    b.Property<int>("UserType")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("ValidatedMed")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("ValidatedUser")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedById");
@@ -151,6 +172,87 @@ namespace Brizaapp.Database.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("identity_user", "identity");
+                });
+
+            modelBuilder.Entity("Brizaapp.Database.Subscriptions.Subscription", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("CreatedById")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("ModifiedById")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Params")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PlanName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.ToTable("subscriptions_subscription", "subscriptions");
+                });
+
+            modelBuilder.Entity("Brizaapp.Database.Subscriptions.SubscriptionUser", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("CreatedById")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("Modified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Params")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PlanName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("SubscriptionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("SubscriptionId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("subscriptions_subscriptionuser", "subscriptions");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -271,6 +373,46 @@ namespace Brizaapp.Database.Migrations
                     b.Navigation("CreatedBy");
 
                     b.Navigation("ModifiedBy");
+                });
+
+            modelBuilder.Entity("Brizaapp.Database.Subscriptions.Subscription", b =>
+                {
+                    b.HasOne("Brizaapp.Database.Identity.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("Brizaapp.Database.Identity.User", "ModifiedBy")
+                        .WithMany()
+                        .HasForeignKey("ModifiedById");
+
+                    b.Navigation("CreatedBy");
+
+                    b.Navigation("ModifiedBy");
+                });
+
+            modelBuilder.Entity("Brizaapp.Database.Subscriptions.SubscriptionUser", b =>
+                {
+                    b.HasOne("Brizaapp.Database.Identity.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("Brizaapp.Database.Subscriptions.Subscription", "Subscription")
+                        .WithMany()
+                        .HasForeignKey("SubscriptionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Brizaapp.Database.Identity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CreatedBy");
+
+                    b.Navigation("Subscription");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
