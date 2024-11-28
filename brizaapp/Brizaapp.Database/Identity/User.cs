@@ -16,6 +16,5 @@ namespace Brizaapp.Database.Identity
     public virtual User? CreatedBy { get; set; }
     public int? ModifiedById { get; set; }
     public virtual User? ModifiedBy { get; set; }
-    public int MyProperty { get; set; }
   }
 }

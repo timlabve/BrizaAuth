@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Brizaapp.Database.Migrations
 {
     [DbContext(typeof(BrizaContext))]
-    [Migration("20241128061451_InitialMigration")]
+    [Migration("20241128071412_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
