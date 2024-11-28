@@ -3,19 +3,26 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Brizaapp.Api.Extensions
 {
-    public static class ProgramExtensions
+  public static class ProgramExtensions
+  {
+    public static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        public static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.AddDbContextPool<BrizaContext>(
-                dbContextOptions => dbContextOptions
-                    .UseMySql(
-                        configuration.GetConnectionString("BrizaDatabase"),
-                        ServerVersion.AutoDetect(configuration.GetConnectionString("BrizaDatabase")))
-                    .EnableSensitiveDataLogging()
-                    .EnableDetailedErrors());
 
-            return services;
-        }
+      var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+      services.AddDbContextPool<BrizaContext>(
+        dbContextOptions =>
+        {
+          dbContextOptions.UseNpgsql(configuration.GetConnectionString("BrizaDatabase"))
+                    .EnableDetailedErrors();
+
+          //Solo en caso que se necesite en desarrollo
+          if (environment == "Development")
+          {
+            dbContextOptions.EnableSensitiveDataLogging();
+          }
+        });
+
+      return services;
     }
+  }
 }

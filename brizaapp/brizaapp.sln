@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Brizaapp.Identity", "Brizaa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Brizaapp.Database", "Brizaapp.Database\Brizaapp.Database.csproj", "{4F3FDFB7-01A4-4E93-8DE1-1B1A3917AADC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brizaapp.Utils", "Brizaapp.Utils\Brizaapp.Utils.csproj", "{80141DE8-5DD6-45A7-8983-58181F937620}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{4F3FDFB7-01A4-4E93-8DE1-1B1A3917AADC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F3FDFB7-01A4-4E93-8DE1-1B1A3917AADC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F3FDFB7-01A4-4E93-8DE1-1B1A3917AADC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80141DE8-5DD6-45A7-8983-58181F937620}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80141DE8-5DD6-45A7-8983-58181F937620}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80141DE8-5DD6-45A7-8983-58181F937620}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80141DE8-5DD6-45A7-8983-58181F937620}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

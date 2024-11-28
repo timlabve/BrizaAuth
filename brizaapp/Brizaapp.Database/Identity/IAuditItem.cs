@@ -8,10 +8,10 @@
 
         int? CreatedById { get; set; }
 
-        User CreatedBy { get; set; }
+        User? CreatedBy { get; set; }
 
         int? ModifiedById { get; set; }
 
-        User ModifiedBy { get; set; }
+        User? ModifiedBy { get; set; }
     }
 }
