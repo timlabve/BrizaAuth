@@ -16,6 +16,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.ConfigureServices(builder.Configuration);
 
+builder.Services.AddControllers()
+    .AddApplicationPart(typeof(Brizaapp.Identity.Controllers.TestController).Assembly)
+    .AddControllersAsServices(); 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

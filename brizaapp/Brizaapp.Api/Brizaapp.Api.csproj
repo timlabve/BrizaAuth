@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Brizaapp.Database\Brizaapp.Database.csproj" />
+    <ProjectReference Include="..\Brizaapp.Identity\Brizaapp.Identity.csproj" />
   </ItemGroup>
 
 </Project>
