@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Brizaapp.Utils
 {

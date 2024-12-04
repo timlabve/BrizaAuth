@@ -17,7 +17,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.ConfigureServices(builder.Configuration);
 
 builder.Services.AddControllers()
-    .AddApplicationPart(typeof(Brizaapp.Identity.Controllers.TestController).Assembly)
+    .AddApplicationPart(typeof(Brizaapp.Identity.Controllers.AuthController).Assembly)
     .AddControllersAsServices(); 
 
 var app = builder.Build();

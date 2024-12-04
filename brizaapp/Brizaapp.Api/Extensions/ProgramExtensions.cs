@@ -1,39 +1,59 @@
 ﻿using Brizaapp.Database;
+using Brizaapp.Database.Identity;
+using Brizaapp.Identity;
+using Brizaapp.Identity.Factories;
+using Brizaapp.Utils.Options;
+using eQualy.P2Pay.Identity.Options;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Brizaapp.Api.Extensions
 {
+
   public static class ProgramExtensions
   {
     public static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration configuration)
     {
-
       var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
+      services.AddDbContextPool<BrizaContext>(dbContextOptions =>
+      {
+        dbContextOptions.UseNpgsql(configuration.GetConnectionString("BrizaDatabase"))
+            .EnableDetailedErrors()
+            .EnableSensitiveDataLogging(false)
+            .LogTo(Console.WriteLine, LogLevel.Warning);
+      });
 
-      services.AddDbContextPool<BrizaContext>(
-        dbContextOptions =>
+      #region options
+      //var jwtAppSettingOptions = configuration.GetSection(nameof(JwtIssuerOptions)).Get<JwtIssuerOptions>();
+        var passwordPolicyOptions = configuration.GetSection(nameof(PasswordPolicyOptions)).Get<PasswordPolicyOptions>();
+
+      #endregion
+
+      #region Identity Services
+
+      services.AddSingleton<IJwtFactory, JwtFactory>();
+
+      //TODO: agregar options idioma
+      services
+        .AddIdentity<User, Role>(options =>
         {
-          dbContextOptions.UseNpgsql(configuration.GetConnectionString("BrizaDatabase"))
-          .EnableDetailedErrors()
-          .EnableSensitiveDataLogging(false).
-          LogTo(Console.WriteLine, LogLevel.Warning);
-        });
+          options.User.RequireUniqueEmail = true;
+          options.Password.RequireDigit = passwordPolicyOptions.RequireDigit;
+          options.Password.RequiredLength = passwordPolicyOptions.RequiredLength;
+          options.Password.RequireNonAlphanumeric = passwordPolicyOptions.RequireNonAlphanumeric;
+          options.Password.RequireUppercase = passwordPolicyOptions.RequireUppercase;
+          options.Password.RequireLowercase = passwordPolicyOptions.RequireLowercase;
+          options.Password.RequiredUniqueChars = passwordPolicyOptions.RequiredUniqueChars;
+        })
+        .AddRoleManager<RoleManager<Role>>()
+        .AddEntityFrameworkStores<BrizaContext>()
+        .AddDefaultTokenProviders();
 
 
-      //services.AddDbContextPool<BrizaContext>(
-      //  dbContextOptions =>
-      //  {
-      //    dbContextOptions.UseNpgsql(configuration.GetConnectionString("BrizaDatabase"))
-      //              .EnableDetailedErrors();
 
-      //Solo en caso que se necesite en desarrollo
-      //if (environment == "Development")
-      //{
-      //  dbContextOptions.EnableSensitiveDataLogging();
-      //}
-      //});
+      services.AddIdentityServices();  
+      #endregion
 
       return services;
     }
