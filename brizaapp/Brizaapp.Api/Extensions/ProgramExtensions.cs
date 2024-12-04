@@ -25,8 +25,10 @@ namespace Brizaapp.Api.Extensions
       });
 
       #region options
-      //var jwtAppSettingOptions = configuration.GetSection(nameof(JwtIssuerOptions)).Get<JwtIssuerOptions>();
-        var passwordPolicyOptions = configuration.GetSection(nameof(PasswordPolicyOptions)).Get<PasswordPolicyOptions>();
+      //TODO: corregir puerto de entrada 
+      var jwtAppSettingOptions = configuration.GetSection(nameof(JwtIssuerOptions)).Get<JwtIssuerOptions>() ?? new JwtIssuerOptions();
+      var passwordPolicyOptions = configuration.GetSection(nameof(PasswordPolicyOptions)).Get<PasswordPolicyOptions>() ?? new PasswordPolicyOptions();
+
 
       #endregion
 
