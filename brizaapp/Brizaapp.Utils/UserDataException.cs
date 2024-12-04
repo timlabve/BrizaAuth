@@ -1,7 +1,12 @@
-﻿namespace Brizaapp.Utils
+﻿using System.Runtime.Serialization;
+
+namespace Brizaapp.Utils
 {
   public class UserDataException : Exception
   {
-    public UserDataException(string message) : base(message) { }
+
+    public object ResponseObject { get; }
+
+    public UserDataException(string message) : base(message) { ResponseObject = new string[0]; }
   }
 }

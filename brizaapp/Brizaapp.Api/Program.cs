@@ -1,4 +1,5 @@
 using Brizaapp.Api.Extensions;
+using Brizaapp.Utils.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,8 @@ builder.Services.AddControllers()
     .AddControllersAsServices(); 
 
 var app = builder.Build();
+
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
