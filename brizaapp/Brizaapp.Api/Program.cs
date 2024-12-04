@@ -1,11 +1,21 @@
 using Brizaapp.Api.Extensions;
 using Brizaapp.Utils.Middlewares;
+using Microsoft.AspNetCore.Hosting;
+using NLog;
+using NLog.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
+LogManager.Configuration = new NLogLoggingConfiguration(
+    builder.Configuration.GetSection("NLog"));
 
 
+builder.Logging.ClearProviders(); 
+builder.Logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace); 
+builder.Logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command",
+    Microsoft.Extensions.Logging.LogLevel.Warning); 
+builder.Logging.AddNLog();
 
 // Add services to the container.
 

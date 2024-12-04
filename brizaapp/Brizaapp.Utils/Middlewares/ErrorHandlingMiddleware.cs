@@ -10,10 +10,12 @@ namespace Brizaapp.Utils.Middlewares
   {
 
     private readonly RequestDelegate next;
+    private readonly ILogger<ErrorHandlingMiddleware> logger;
 
-    public ErrorHandlingMiddleware(RequestDelegate next)
+    public ErrorHandlingMiddleware(RequestDelegate next, ILogger<ErrorHandlingMiddleware> logger)
     {
       this.next = next;
+      this.logger = logger;
     }
 
     public async Task Invoke(HttpContext context)
@@ -24,7 +26,7 @@ namespace Brizaapp.Utils.Middlewares
       }
       catch (TaskCanceledException ex1)
       {
-        //logger.LogDebug(ex1, nameof(TaskCanceledException));
+        logger.LogDebug(ex1, nameof(TaskCanceledException));
       }
       catch (Exception ex)
       {
@@ -52,7 +54,7 @@ namespace Brizaapp.Utils.Middlewares
           errorBody = new { errors = ex.ResponseObject, traceId = context.TraceIdentifier };
         }
 
-        //logger.LogWarning(exception, "BadRequest - TraceId: {traceId}", context.TraceIdentifier);
+        logger.LogWarning(exception, "BadRequest - TraceId: {traceId}", context.TraceIdentifier);
       }
 
 
