@@ -1,1 +1,1 @@
-# brizaapp
+# BrizaAuth
